@@ -1,10 +1,12 @@
-import { Text, SafeAreaView } from 'react-native'
+import { Text, SafeAreaView, Image } from 'react-native'
 import React from 'react'
 
 export default function Signin() {
   return (
     <SafeAreaView>
-      <Text>Signin</Text>
+      <Image source={require("../../assets/note-taking.png")}
+      style={{ alignSelf: "center", width:"100px" }}
+      ></Image>
     </SafeAreaView>
   )
 }
