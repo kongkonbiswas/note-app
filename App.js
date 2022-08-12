@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Signup from './src/screens/signup';
 import Signin from './src/screens/signin';
@@ -7,12 +7,20 @@ import Home from './src/screens/home';
 import Edit from './src/screens/edit';
 import Create from './src/screens/create';
 
+const AppTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    backgroundColor: "#fff"
+  }
+}
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const user = false; // not authentacad
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={AppTheme}>
         <Stack.Navigator>
           {
             user ? (
