@@ -11,7 +11,7 @@ const AppTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   }
 }
 

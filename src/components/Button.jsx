@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import {Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 
 export default function Button() {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         height: 45,
         backgroundColor: '#FFE600',
         justifyContent: 'center',
-        alignitems: 'center'
+        alignItems: 'center',
     },
     title: {
         fontSize: 16
