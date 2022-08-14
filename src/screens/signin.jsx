@@ -1,10 +1,11 @@
 import { Text, SafeAreaView, Image, TextInput, View, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
+import Input from '../components/Input'
 
-export default function Signin() {
+export default function Signin({navigation}) {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1 }}>
       <Image source={require("../../assets/note-taking.png")}
       style={{ alignSelf: "center", height: 250, width: 400}}
       ></Image>
@@ -13,9 +14,15 @@ export default function Signin() {
       </Text>
 
       <View style={{paddingHorizontal: 16, paddingVertical: 25}}>
-        <TextInput placeholder='Email adress' style={styles.input}/>
-        <TextInput placeholder='Passwoard' style={styles.input} secureTextEntry/>
-        <Button title={"Login"} customStyles={{alignSelf: 'center', marginTop: 40}}></Button>
+        <Input placeholder='Email address'></Input>
+        <Input placeholder='Passwoard'secureTextEntry/>
+      </View>
+
+      <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
+      <Button title={"Login"} customStyles={{alignSelf: 'center', marginBottom: 60}}></Button>
+        <Pressable onPress={() => { navigation.navigate('Signup')}}>
+          <Text>Don't have an account? <Text style={{color: 'green', fontWeight: 'bold'}}>Sign up</Text></Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   )
