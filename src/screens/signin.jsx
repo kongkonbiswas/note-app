@@ -15,7 +15,7 @@ export default function Signin({navigation}) {
 
       <View style={{paddingHorizontal: 16, paddingVertical: 25}}>
         <Input placeholder='Email address'></Input>
-        <Input placeholder='Passwoard'secureTextEntry/>
+        <Input placeholder='Password'secureTextEntry/>
       </View>
 
       <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
