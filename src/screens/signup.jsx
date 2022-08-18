@@ -2,7 +2,7 @@ import { Text, SafeAreaView, Image, TextInput, View, StyleSheet, Pressable } fro
 import React, { useState } from 'react'
 import Button from '../components/Button'
 import Input from '../components/Input'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
 const auth = getAuth()
 
