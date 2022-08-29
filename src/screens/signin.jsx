@@ -6,7 +6,7 @@ import Input from '../components/Input'
 export default function Signin({navigation}) {
   return (
     <SafeAreaView style={{flex: 1 }}>
-      <Image source={require("../../assets/login-image.png")}
+      <Image source={require("../../assets/note-taking.png")}
       style={{ alignSelf: "center", height: 250, width: 400}}
       ></Image>
       <Text style={{ fontSize: 18, fontWeight: "bold", textAlign: "center", marginTop: 20}}>
