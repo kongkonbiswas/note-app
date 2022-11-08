@@ -1,12 +1,12 @@
-import {Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
-export default function Button({title, onPress, customStyles }) {
-  return (
-    <TouchableOpacity style={[styles.button, customStyles]} onPress={onPress}>
-        <Text style={styles.title}>{title}</Text>
-    </TouchableOpacity>
-  )
+export default function Button({ title, onPress, customStyles }) {
+    return (
+        <TouchableOpacity style={[styles.button, customStyles]} onPress={onPress}>
+            <Text style={styles.title}>{title}</Text>
+        </TouchableOpacity>
+    )
 }
 
 const styles = StyleSheet.create({

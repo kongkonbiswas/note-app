@@ -1,5 +1,6 @@
 # note-app
 ## npm i firebase@9.7.0
+expo doctor --fix-dependencies
 # Note app at github
 
 

@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { View, Text, ActivityIndicator, Pressable, Image } from "react-native";
 import { showMessage } from "react-native-flash-message";
@@ -10,21 +10,22 @@ import RadioInput from "../components/radio-input";
 
 const noteColorOptions = ["red", "blue", "green"];
 export default function Create({ navigation, route, user }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [noteColor, setNoteColor] = useState("blue");
+  const noteItem = route.params.item;
+  const [title, setTitle] = useState(noteItem.title);
+  const [description, setDescription] = useState(noteItem.description);
+  const [noteColor, setNoteColor] = useState(noteItem.color);
   const [loading, setLoading] = useState(false);
 
-  const onPressCreate = async () => {
+  const onPressUpdate = async () => {
+    const noteRef = doc(db, "notes", noteItem.id);
+
     setLoading(true);
     try {
-      const docRef = await addDoc(collection(db, "notes"), {
+      await updateDoc(doc(db, "notes", noteItem.id), {
         title: title,
         description: description,
         color: noteColor,
-        uid: user.uid,
       });
-      console.log("docRef ", docRef);
       setLoading(false);
       showMessage({
         message: "Note created successfully",
@@ -39,12 +40,17 @@ export default function Create({ navigation, route, user }) {
 
   return (
     <SafeAreaView style={{ marginHorizontal: 20, flex: 1 }}>
-      <Input placeholder="Title" onChangeText={(text) => setTitle(text)} />
+      <Input
+        placeholder="Title"
+        onChangeText={(text) => setTitle(text)}
+        value={title}
+      />
 
       <Input
         placeholder="Description"
         onChangeText={(text) => setDescription(text)}
         multiline={true}
+        value={description}
       />
 
       <View style={{ marginTop: 25, marginBottom: 15 }}>
@@ -70,7 +76,7 @@ export default function Create({ navigation, route, user }) {
             marginTop: 60,
             width: "100%",
           }}
-          onPress={onPressCreate}
+          onPress={onPressUpdate}
         />
       )}
     </SafeAreaView>

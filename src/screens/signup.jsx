@@ -1,109 +1,103 @@
-import { Text, SafeAreaView, Image, TextInput, View, StyleSheet, Pressable } from 'react-native'
-import React, { useState } from 'react'
-import Button from '../components/Button'
-import Input from '../components/Input'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { auth, db } from "../../App";
+import Button from "../components/button";
+import Input from "../components/input";
+import RadioInput from "../components/radio-input";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { showMessage } from "react-native-flash-message";
 
-const auth = getAuth()
-
-const genderOptions = [ 'Male', 'Female']
+const OPTIONS = ["Male", "Female"];
 
 export default function Signup() {
-  const [gender, setGender] = useState(null)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [age, setAge] = useState("")
-  const [name, setName] = useState("")
-  
-  const signup = () => {
-    // Create a new user
-    createUserWithEmailAndPassword( auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log("User created", user)
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    })
-  }
+  const [gender, setGender] = React.useState(null);
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [age, setAge] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+
+  const signup = async () => {
+    setLoading(true);
+    try {
+      // 1. create user with email and password
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("result ---> ", result);
+
+      // 2. add user profile to database
+      await addDoc(collection(db, "users"), {
+        name: name,
+        email: email,
+        age: age,
+        uid: result.user.uid,
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.log("error ---> ", error);
+      showMessage({
+        message: "ERROR!",
+        type: "danger",
+      });
+      setLoading(false);
+    }
+  };
 
   return (
-    <SafeAreaView style={{flex: 1 }}>
-      <Text style={{ fontSize: 18, fontWeight: "bold", textAlign: "center", marginTop: 20}}>
-        Never forget your notes!
-      </Text>
+    <SafeAreaView>
+      <View style={{ margin: 25 }}>
+        <Input
+          placeholder="Email"
+          autoCapitalize={"none"}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Input
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+        />
+        <Input
+          placeholder="Full name"
+          autoCapitalize={"words"}
+          onChangeText={(text) => setName(text)}
+        />
+        <Input placeholder="Age" onChangeText={(text) => setAge(text)} />
 
-      <View style={{paddingHorizontal: 16, paddingVertical: 25}}>
-        <Input placeholder='Email adress' onChangeText={(text) => setEmail(text)} />
-        <Input placeholder='Password' onChangeText={(text) => setPassword(text)} secureTextEntry/>
-        <Input placeholder='Full Name' onChangeText={(text) => setName(text)} />
-        <Input placeholder='Age' onChangeText={(text) => setAge(text)} />
-        <View style={{ marginVertical: 20 }}>
-          <Text>Select Gender</Text>
+        <View style={{ marginTop: 20 }}>
+          <Text style={{ marginBottom: 15 }}>Select your gender</Text>
+          {OPTIONS.map((option, index) => (
+            <RadioInput
+              key={index}
+              label={option}
+              value={gender}
+              setValue={setGender}
+            />
+          ))}
         </View>
-        {genderOptions.map((option) => {
-          const selected = option === gender;
-          return(
-            <Pressable onPress={() => setGender(option)} key={option} style={styles.radioContainer}>
-              <View style={[styles.outerCircle, selected && styles.selectedOuterCircle]}>
-                <View style={[styles.innerCircle, selected && styles.selectedInnerCircle]}></View>
-              </View>
-              <Text style={styles.radioText}>{option}</Text>
-            </Pressable>
-          )
-            
-        })}
-      </View>
-
-      <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
-      <Button title={"Signup"} customStyles={{alignSelf: 'center', marginBottom: 60}}  onPress={signup}></Button>
-        <Pressable>
-          <Text>Already have an account? <Text style={{color: 'green', fontWeight: 'bold'}}>Sign in</Text></Text>
-        </Pressable>
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            title="Submit"
+            customStyles={{ marginTop: 25, alignSelf: "center" }}
+            onPress={signup}
+          />
+        )}
       </View>
     </SafeAreaView>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 48,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginBottom: 25,
-  },
-
-  radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10
-  },
-  outerCircle: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: "#cfcfcf",
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  innerCircle: {
-    height: 15,
-    width: 15,
-    borderRadius: 7.5,
-    borderWidth: 1,
-    borderColor: "#cfcfcf",
-  },
-  radioText: {
-    marginLeft: 10,
-  },
-  selectedOuterCircle: {
-    // backgroundColor: "orange",
-  },
-  selectedInnerCircle:{
-    backgroundColor: 'orange',
-    borderColor: 'orange'
-  },
-  
-})
